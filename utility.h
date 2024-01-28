@@ -38,33 +38,41 @@ void viewSingle(struct NODE * head) {
 }
 
 // add students
-struct NODE * insertNode(struct NODE * head) {
-    struct NODE * new = (struct NODE *) malloc(sizeof(struct NODE));
-    printf("\n");
-    printf("Enter Roll No.   \n");
-    scanf("%d", &new->student.roll);
-    printf("Enter Name      \n");
-    scanf(" %[^\n]s", new->student.name);
-    printf("Enter Your Marks    \n");
-    scanf("%f", &new->student.marks);
-    printf("Enter your DOB(dd-mm-yyyy)  \n");
-    scanf("%d %d %d", &new->student.dob.date, &new->student.dob.month, &new->student.dob.year);
-    if (new == NULL) {
+struct NODE *insertNode(struct NODE *head) {
+    struct NODE *newNode = (struct NODE *)malloc(sizeof(struct NODE));
+    if (newNode == NULL) {
         printf("Memory Allocation Failed");
         exit(1);
     }
-    new->next = NULL;
-    struct NODE * ptr = head;
-    if (ptr == NULL) {
-        head = new;
-    } else {
-        while (ptr->next != NULL) {
-            ptr = ptr->next;
-        }
-        ptr->next = new;
+    
+    printf("Enter Roll No.:\n");
+    scanf("%d", &newNode->student.roll);
+    printf("Enter Name:\n");
+    scanf(" %[^\n]", newNode->student.name);
+    printf("Enter Your Marks:\n");
+    scanf("%f", &newNode->student.marks);
+    printf("Enter your DOB(dd-mm-yyyy):\n");
+    scanf("%d %d %d", &newNode->student.dob.date, &newNode->student.dob.month, &newNode->student.dob.year);
+    
+    newNode->next = NULL;
+
+    if (head == NULL || newNode->student.roll < head->student.roll) {
+        newNode->next = head;
+        head = newNode;
+        return head;
     }
+
+    struct NODE *current = head;
+    while (current->next != NULL && current->next->student.roll < newNode->student.roll) {
+        current = current->next;
+    }
+
+    newNode->next = current->next;
+    current->next = newNode;
+
     return head;
 }
+
 
 // delete record
 struct NODE * deleteStudent(struct NODE * head) {
